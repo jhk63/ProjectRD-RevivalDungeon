@@ -13,8 +13,6 @@ Saved
 *.xcodeproj
 *.xcworkspace
 
-Build
-
 .idea
 Content/Player
 Content/StageMapAsset 

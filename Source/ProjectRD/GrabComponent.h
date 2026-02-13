@@ -39,10 +39,12 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float HoldDistance = 200;
+	
+	UPROPERTY()
+	class UPhysicsHandleComponent* CachedPhysicsHandle;
 
 	class UPhysicsHandleComponent* GetPhysicsHandle() const;
 
 	bool GetGrabbableInReach(FHitResult& OutHitResult) const;
-
-		
+	
 };

@@ -37,8 +37,10 @@ public:
 	float SprintSpeed = 500.f;
 
 private:
+	UPROPERTY()
 	class ACharacter* OwnerRef;
 
+	UPROPERTY()
 	class UCharacterMovementComponent* MovementComp;
 
 	bool bIsSprinting = false;

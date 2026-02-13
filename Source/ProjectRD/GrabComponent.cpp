@@ -16,16 +16,14 @@ UGrabComponent::UGrabComponent()
 	// ...
 }
 
-
 // Called when the game starts
 void UGrabComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
 	// ...
-	
+	CachedPhysicsHandle = GetPhysicsHandle();
 }
-
 
 // Called every frame
 void UGrabComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -33,21 +31,18 @@ void UGrabComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
-	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
-	if (!PhysicsHandle) return;
-
-	if (PhysicsHandle->GetGrabbedComponent())
+	if (CachedPhysicsHandle)
 	{
+		if (!CachedPhysicsHandle->GetGrabbedComponent()) return;
+		
 		FVector TargetLocation = GetComponentLocation() + GetForwardVector() * HoldDistance;
-		PhysicsHandle->SetTargetLocationAndRotation(TargetLocation, GetComponentRotation());
+		CachedPhysicsHandle->SetTargetLocationAndRotation(TargetLocation, GetComponentRotation());
 	}
 }
 
-
 void UGrabComponent::Grab()
 {
-	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
-	if (!PhysicsHandle) return;
+	if (!CachedPhysicsHandle) return;
 
 	FHitResult HitResult;
 
@@ -63,7 +58,7 @@ void UGrabComponent::Grab()
 		HitActor->Tags.Add("Grabbed");
 		HitActor->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
-		PhysicsHandle->GrabComponentAtLocationWithRotation(
+		CachedPhysicsHandle->GrabComponentAtLocationWithRotation(
 			HitComponent,
 			NAME_None,
 			HitResult.ImpactPoint,
@@ -72,22 +67,19 @@ void UGrabComponent::Grab()
 	}
 }
 
-
 void UGrabComponent::Release()
 {
 	// UE_LOG(LogTemp, Display, TEXT("Release Grabber"));
-	UPhysicsHandleComponent* PhysicsHandle = GetPhysicsHandle();
-	if (!PhysicsHandle) return;
+	if (!CachedPhysicsHandle) return;
 
-	if (PhysicsHandle->GetGrabbedComponent())
+	if (CachedPhysicsHandle->GetGrabbedComponent())
 	{
-		AActor* GrabbedActor = PhysicsHandle->GetGrabbedComponent()->GetOwner();
+		AActor* GrabbedActor = CachedPhysicsHandle->GetGrabbedComponent()->GetOwner();
 		GrabbedActor->Tags.Remove("Grabbed");
 
-		PhysicsHandle->ReleaseComponent();
+		CachedPhysicsHandle->ReleaseComponent();
 	}
 }
-
 
 UPhysicsHandleComponent* UGrabComponent::GetPhysicsHandle() const
 {

@@ -16,26 +16,6 @@ UDialogueComponent::UDialogueComponent()
 	// ...
 }
 
-
-// Called when the game starts
-void UDialogueComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
-	
-}
-
-
-// Called every frame
-void UDialogueComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
-
 void UDialogueComponent::CreateDialogueWidget()
 {
 	if (!DialogueWidgetClass) return;
